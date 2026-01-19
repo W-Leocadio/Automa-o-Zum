@@ -1,0 +1,7 @@
+node_modules/
+test-results/
+playwright-report/
+.env
+storageState*.json
+.DS_Store
+Thumbs.db
