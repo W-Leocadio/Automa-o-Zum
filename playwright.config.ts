@@ -18,7 +18,10 @@ export default defineConfig({
   use: {
     baseURL: 'https://playwright.dev',
     trace: 'on-first-retry',
-    video: 'on',
+    video: {
+      mode: 'on',
+      size: { width: 1920, height: 1080 }
+    },
   },
   projects: [
     {

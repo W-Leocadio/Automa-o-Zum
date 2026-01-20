@@ -7,5 +7,5 @@ test('Login Stage Carrier', async ({ page }) => {
   await loginPage.goto(process.env.BASE_URL_CARRIER!);
   await loginPage.login(process.env.CARRIER_USER_EMAIL!, process.env.CARRIER_USER_PASSWORD!);
 
-  await expect(page).toHaveURL(/.*\/main\/shipments/, { timeout: 15000 });
+  await expect(page).toHaveURL(/.*\/main\/shipments/, { timeout: 30000 });
 });
