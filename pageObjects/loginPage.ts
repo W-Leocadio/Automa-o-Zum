@@ -14,6 +14,7 @@ export class LoginPage {
     this.passwordInput = page.getByRole('textbox', { name: 'Password' });
 
     // Define o seletor do botão de login dependendo da variante (carrier usa 'Login', broker usa 'LOG IN')
+    // Defines the login button selector depending on the variant (carrier uses 'Login', broker uses 'LOG IN')
     if (variant === 'carrier') {
       this.loginButton = page.getByRole('button', { name: 'Login', exact: true });
     } else {
@@ -22,11 +23,13 @@ export class LoginPage {
   }
 
   // Navega para a URL especificada
+  // Navigates to the specified URL
   async goto(url: string) {
     await this.page.goto(url);
   }
 
   // Realiza o login preenchendo email, senha e clicando no botão
+  // Performs login by filling in email, password and clicking the button
   async login(email: string, password: string) {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
