@@ -27,7 +27,7 @@ export default defineConfig({
     {
       name: 'Chrome',
       use: {
-        viewport: null,
+        viewport: { width: 1920, height: 1080 },
         launchOptions: {
           args: ['--start-maximized'],
         },
