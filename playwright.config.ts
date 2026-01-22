@@ -20,17 +20,14 @@ export default defineConfig({
     trace: 'on-first-retry',
     video: {
       mode: 'on',
-      size: { width: 1920, height: 1080 }
+      size: { width: 1280, height: 720 }
     },
   },
   projects: [
     {
       name: 'Chrome',
       use: {
-        viewport: { width: 1920, height: 1080 },
-        launchOptions: {
-          args: ['--start-maximized'],
-        },
+        viewport: { width: 1280, height: 720 },
       },
     },
   ],
