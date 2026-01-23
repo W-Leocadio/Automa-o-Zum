@@ -63,9 +63,11 @@ test.describe('Broker Shipment List Validations', () => {
 
     await test.step('Validate Filters', async () => {
       // 1. Validar filtro padrão "All"
+      // 1. Validate default filter "All"
       await expect(shipmentListPage.filterSelect).toContainText('All');
       
       // 2. Testar filtro "Load ID"
+      // 2. Test filter "Load ID"
       await shipmentListPage.selectFilterType('Load ID');
       
       const loadIdTerm = '10021';
@@ -76,6 +78,7 @@ test.describe('Broker Shipment List Validations', () => {
       await expect(rows.first()).toBeVisible({ timeout: 15000 });
       
       // Validar que as linhas contêm o ID buscado
+      // Validate that rows contain the searched ID
       let rowTexts = await rows.allInnerTexts();
       expect(rowTexts.length).toBeGreaterThan(0);
       for (const text of rowTexts) {
@@ -83,10 +86,12 @@ test.describe('Broker Shipment List Validations', () => {
       }
 
       // 3. Limpar a busca
+      // 3. Clear search
       await shipmentListPage.clearSearch();
       // await shipmentListPage.validateLoading();
 
       // 4. Testar filtro "Pick" (Estado)
+      // 4. Test filter "Pick" (State)
       await shipmentListPage.selectFilterType('Pick');
 
       const stateTerm = 'Oklahoma';
@@ -97,6 +102,7 @@ test.describe('Broker Shipment List Validations', () => {
       await expect(rows.first()).toBeVisible({ timeout: 15000 });
 
       // Validar que as linhas contêm "Oklahoma" ou "OK"
+      // Validate that rows contain "Oklahoma" or "OK"
       rowTexts = await rows.allInnerTexts();
       expect(rowTexts.length).toBeGreaterThan(0);
       
@@ -106,10 +112,12 @@ test.describe('Broker Shipment List Validations', () => {
       }
 
       // 5. Limpar a busca
+      // 5. Clear search
       await shipmentListPage.clearSearch();
       // await shipmentListPage.validateLoading();
 
       // 6. Testar filtro "Drop" (Estado)
+      // 6. Test filter "Drop" (State)
       await shipmentListPage.selectFilterType('Drop');
 
       const dropTerm = 'New York';
@@ -120,6 +128,7 @@ test.describe('Broker Shipment List Validations', () => {
       await expect(rows.first()).toBeVisible({ timeout: 15000 });
 
       // Validar que as linhas contêm "New York" ou "NY"
+      // Validate that rows contain "New York" or "NY"
       rowTexts = await rows.allInnerTexts();
       expect(rowTexts.length).toBeGreaterThan(0);
       
@@ -129,22 +138,27 @@ test.describe('Broker Shipment List Validations', () => {
       }
 
       // 7. Limpar a busca
+      // 7. Clear search
       await shipmentListPage.clearSearch();
       // await shipmentListPage.validateLoading();
 
       // 8. Testar filtro "Pickup Dates"
+      // 8. Test filter "Pickup Dates"
       await shipmentListPage.openPickupDatesFilter();
 
       // Validar que o botão Apply está desabilitado inicialmente
+      // Validate that Apply button is disabled initially
       await expect(shipmentListPage.applyFilterButton).toBeDisabled();
 
       // Calcular datas (1 mês atrás e dia atual)
+      // Calculate dates (1 month ago and current day)
       const today = new Date();
       const startDate = new Date();
-      startDate.setMonth(today.getMonth() - 1); // 1 mês atrás
-      const endDate = new Date(); // Dia atual
+      startDate.setMonth(today.getMonth() - 1); // 1 mês atrás / 1 month ago
+      const endDate = new Date(); // Dia atual / Current day
 
       // Formatar datas como MM/DD/YYYY
+      // Format dates as MM/DD/YYYY
       const formatDate = (date: Date) => {
         const mm = String(date.getMonth() + 1).padStart(2, '0');
         const dd = String(date.getDate()).padStart(2, '0');
@@ -156,20 +170,25 @@ test.describe('Broker Shipment List Validations', () => {
       const endDateStr = formatDate(endDate);
 
       // Preencher datas
+      // Fill dates
       await shipmentListPage.setPickupDateRange(startDateStr, endDateStr);
 
       // Validar que o botão Apply está habilitado
+      // Validate that Apply button is enabled
       await expect(shipmentListPage.applyFilterButton).toBeEnabled();
 
       // Aplicar filtro
+      // Apply filter
       await shipmentListPage.applyFilter();
       // await shipmentListPage.validateLoading();
 
       // Validar resultados na tabela (Pick Date deve estar no intervalo)
+      // Validate table results (Pick Date must be in range)
       rows = shipmentListPage.getRows();
       await expect(rows.first()).toBeVisible({ timeout: 15000 });
       
       // Encontrar o índice da coluna "Pick Date" dinamicamente
+      // Find "Pick Date" column index dynamically
       const firstRowCells = rows.first().locator('mat-cell');
       const cellCount = await firstRowCells.count();
       let pickDateColIndex = -1;
@@ -179,7 +198,7 @@ test.describe('Broker Shipment List Validations', () => {
         const text = await firstRowCells.nth(i).innerText();
         if (dateRegex.test(text)) {
           pickDateColIndex = i;
-          break; // A primeira coluna com data deve ser a Pick Date
+          break; // A primeira coluna com data deve ser a Pick Date / The first date column should be Pick Date
         }
       }
 
@@ -187,6 +206,7 @@ test.describe('Broker Shipment List Validations', () => {
       console.log(`Pick Date column identified at index: ${pickDateColIndex}`);
 
       // Validar que todas as linhas têm uma data válida nessa coluna específica
+      // Validate that all rows have a valid date in this specific column
       const pickDateTexts = await shipmentListPage.getColumnTexts(pickDateColIndex);
       expect(pickDateTexts.length).toBeGreaterThan(0);
       
@@ -195,38 +215,47 @@ test.describe('Broker Shipment List Validations', () => {
       }
 
       // 9. Limpar filtros anteriores
+      // 9. Clear previous filters
       await shipmentListPage.clearAllFilters();
       // await shipmentListPage.validateLoading();
 
       // 10. Testar filtro "Dropoff Dates"
+      // 10. Test filter "Dropoff Dates"
       await shipmentListPage.openDropoffDatesFilter();
 
       // Validar que o botão Apply está desabilitado inicialmente
+      // Validate that Apply button is disabled initially
       await expect(shipmentListPage.applyFilterButton).toBeDisabled();
 
       // Calcular datas (15 dias atrás e dia atual)
+      // Calculate dates (15 days ago and current day)
       const startDateDrop = new Date();
-      startDateDrop.setDate(today.getDate() - 15); // 15 dias atrás
-      const endDateDrop = new Date(); // Dia atual
+      startDateDrop.setDate(today.getDate() - 15); // 15 dias atrás / 15 days ago
+      const endDateDrop = new Date(); // Dia atual / Current day
 
       const startDateDropStr = formatDate(startDateDrop);
       const endDateDropStr = formatDate(endDateDrop);
 
       // Preencher datas
+      // Fill dates
       await shipmentListPage.setDateRange(startDateDropStr, endDateDropStr);
 
       // Validar que o botão Apply está habilitado
+      // Validate that Apply button is enabled
       await expect(shipmentListPage.applyFilterButton).toBeEnabled();
 
       // Aplicar filtro
+      // Apply filter
       await shipmentListPage.applyFilter();
       // await shipmentListPage.validateLoading();
 
       // Validar resultados na tabela (Drop Date deve estar no intervalo)
+      // Validate table results (Drop Date must be in range)
       rows = shipmentListPage.getRows();
       await expect(rows.first()).toBeVisible({ timeout: 15000 });
 
       // Encontrar o índice da coluna "Drop Date" dinamicamente
+      // Find "Drop Date" column index dynamically
       const firstRowCellsDrop = rows.first().locator('mat-cell');
       const cellCountDrop = await firstRowCellsDrop.count();
       let dropDateColIndex = -1;
@@ -262,6 +291,7 @@ test.describe('Broker Shipment List Validations', () => {
        }
 
        // Validar que Pick Date TAMBÉM está visível e válido
+       // Validate that Pick Date is ALSO visible and valid
        if (pickDateColIndex > -1) {
            const pickDateTextsAfterDropFilter = await shipmentListPage.getColumnTexts(pickDateColIndex);
            expect(pickDateTextsAfterDropFilter.length).toBeGreaterThan(0);
@@ -271,10 +301,12 @@ test.describe('Broker Shipment List Validations', () => {
        }
 
       // 11. Limpar filtros anteriores
+      // 11. Clear previous filters
       await shipmentListPage.clearAllFilters();
       // await shipmentListPage.validateLoading();
 
       // 12. Testar filtro "Priority"
+      // 12. Test filter "Priority"
       await shipmentListPage.openPriorityFilter();
       
       const dropdown = shipmentListPage.priorityDropdown;
@@ -297,6 +329,7 @@ test.describe('Broker Shipment List Validations', () => {
       expect(finalRowCount).toBeGreaterThan(0);
 
       // 13. Limpar filtros anteriores
+      // 13. Clear previous filters
       await shipmentListPage.clearAllFilters();
       // await shipmentListPage.validateLoading();
     });

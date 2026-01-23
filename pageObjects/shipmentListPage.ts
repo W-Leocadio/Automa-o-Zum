@@ -243,6 +243,7 @@ export class ShipmentListPage {
 
   async selectPriorityOption(optionText: string) {
     // Encontrar o container que tem o texto e então o checkbox dentro ou próximo
+    // Find container having text and then checkbox inside or near
     await this.priorityDropdown.locator('div.mb-12, div.mb-4')
         .filter({ hasText: optionText })
         .locator('mat-checkbox')
@@ -255,15 +256,18 @@ export class ShipmentListPage {
 
   async openShipmentStatusFilter() {
     // Forçar clique se necessário ou garantir visibilidade
+    // Force click if necessary or ensure visibility
     await this.shipmentStatusFilterButton.waitFor({ state: 'visible' });
     await this.shipmentStatusFilterButton.click();
     
     // Pequena pausa para animação do dropdown
+    // Small pause for dropdown animation
     await this.page.waitForTimeout(500);
 
     // Garantir que o dropdown está visível antes de prosseguir
     // Ensure dropdown is visible before proceeding
     // Usar um locator mais genérico primeiro para debug/estabilidade
+    // Use a more generic locator first for debug/stability
     await this.page.locator('.dropdown-list.small-dropdown').first().waitFor({ state: 'visible' });
   }
 
@@ -301,6 +305,7 @@ export class ShipmentListPage {
   // Gets table IDs (assuming first column or specific ID column)
   async getColumnTexts(columnIndex: number = 0) {
     // mat-cell:nth-child(index + 1) porque CSS é 1-based
+    // mat-cell:nth-child(index + 1) because CSS is 1-based
     return this.tableRows.locator(`mat-cell:nth-child(${columnIndex + 1})`).allInnerTexts();
   }
 }
